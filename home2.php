@@ -2,6 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+$msg = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($_FILES['file']['name'])) {
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Extract extension safely
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-        // Block ONLY .php but allow .php5
+        // Blacklist ONLY .php, allow everything else including .php5
         if ($ext === "php") {
             $msg = "'.php' files are not allowed.";
         } else {
@@ -35,3 +37,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+</head>
+<body>
+
+<h2>Upload File</h2>
+
+<?php if (!empty($msg)): ?>
+    <p><?php echo htmlspecialchars($msg); ?></p>
+<?php endif; ?>
+
+<form method="POST" enctype="multipart/form-data">
+    <label>Select File:</label><br>
+    <input type="file" name="file"><br><br>
+    <button type="submit">Upload</button>
+</form>
+
+</body>
+</html>
